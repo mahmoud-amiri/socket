@@ -1,3 +1,3 @@
-D:/github/socket/c/server/build/CMakeFiles/server_socket.dir
-D:/github/socket/c/server/build/CMakeFiles/edit_cache.dir
-D:/github/socket/c/server/build/CMakeFiles/rebuild_cache.dir
+/home/mahmoud/git/socket/c/server/build/CMakeFiles/server_socket.dir
+/home/mahmoud/git/socket/c/server/build/CMakeFiles/edit_cache.dir
+/home/mahmoud/git/socket/c/server/build/CMakeFiles/rebuild_cache.dir

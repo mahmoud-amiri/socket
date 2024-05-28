@@ -2,7 +2,7 @@
 
 # Set error handling
 set -e
-
+rm -rf ./client/build ./server/build
 # Build client
 echo "Building client..."
 cd ./client

@@ -2,6 +2,7 @@ import socket
 import json
 import signal
 import sys
+from math import ceil
 
 CHUNK_SIZE = 4096
 class Server:
@@ -89,6 +90,46 @@ class Server:
         self.server_socket.close()
         print("Server has stopped")
         sys.exit()
+
+    def send_large_data(self, data):
+        serialized_data = json.dumps(data)
+        print(f"len(serialized_data) = {len(serialized_data)}")
+        num_chunks = ceil(len(serialized_data) / CHUNK_SIZE)
+        print(f"num_chunks = {num_chunks}")
+        for i in range(num_chunks):
+            chunk = serialized_data[i * CHUNK_SIZE:(i + 1) * CHUNK_SIZE]
+            self.send_data({"chunk": chunk, "index": i, "total": num_chunks})
+            print(f"chunk number {i} is sent")
+            data = self.receive_data()
+            print(f"server answered : {data}")
+
+
+    def receive_large_data(self, max_attempts=100000):
+        partial_data = ""
+        attempts = 0
+
+        while attempts < max_attempts:
+            print(f"attempts = {attempts}")
+            chunk = self.receive_data()
+            if chunk:
+                chunk_data = chunk.get("chunk", "")
+                index = chunk.get("index", 0)
+                total = chunk.get("total", 0)
+                self.send_data({"data": f" chunk {index}/{total-1} received successfully"}) 
+                print(f"index = {index} / total = {total-1}")
+                partial_data += chunk_data
+
+                if index + 1 == total:
+                    print("Last chunk received")
+                    # Last chunk received
+                    try:
+                        return json.loads(partial_data)
+                    except json.JSONDecodeError as e:
+                        print(f"Failed to parse complete data: {e}")
+                        return None
+            attempts += 1
+
+        raise TimeoutError("Failed to receive all chunks within the maximum number of attempts")
 
 if __name__ == "__main__":
     port = int(input("Enter the port for the server: "))

@@ -19,7 +19,7 @@
 #include "cJSON.h"
 
 #define DEFAULT_PORT 5000
-#define BUFFER_SIZE 1024
+#define BUFFER_SIZE 4096
 
 void error_handling(const char *message) {
     perror(message);
